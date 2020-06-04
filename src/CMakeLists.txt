@@ -57,19 +57,19 @@ add_custom_command(TARGET Gen_buildvm
     DEPENDS buildvm
 )
 
-fips_begin_lib(liblua51)
+fips_begin_lib(luajit_liblua51)
 fips_files_ex(. lj_*.c lib_*.c lj_vm.obj GROUP "sources")
 fips_end_lib()
 
-add_dependencies(liblua51 Gen_buildvm)
+add_dependencies(luajit_liblua51 Gen_buildvm)
 
-fips_begin_sharedlib(dlllua51)
+fips_begin_sharedlib(luajit_dlllua51)
 fips_files_ex(. lj_*.c lib_*.c lj_vm.obj GROUP "sources")
 fips_end_sharedlib()
 
-add_dependencies(dlllua51 Gen_buildvm)
+add_dependencies(luajit_dlllua51 Gen_buildvm)
 
 fips_begin_app(luajit cmdline)
 fips_files(luajit.c)
-fips_deps(liblua51)
+fips_deps(luajit_liblua51)
 fips_end_app()

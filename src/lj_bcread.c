@@ -203,12 +203,14 @@ static GCtab *bcread_ktab(LexState *ls)
   MSize narray = bcread_uleb128(ls);
   MSize nhash = bcread_uleb128(ls);
   GCtab *t = lj_tab_new(ls->L, narray, hsize2hbits(nhash));
+  
   if (narray) {  /* Read array entries. */
     MSize i;
     TValue *o = tvref(t->array);
     for (i = 0; i < narray; i++, o++)
       bcread_ktabk(ls, o);
   }
+
   if (nhash) {  /* Read hash entries. */
     MSize i;
     for (i = 0; i < nhash; i++) {
@@ -438,8 +440,11 @@ GCproto *lj_bcread(LexState *ls)
       break;
     }
     bcread_want(ls, 5);
+
+    // 最后一层Proto由于读取size为0而退出解析
     len = bcread_uleb128(ls);
     if (!len) break;  /* EOF */
+    
     bcread_need(ls, len);
     startp = ls->p;
     pt = lj_bcread_proto(ls);
