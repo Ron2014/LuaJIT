@@ -37,16 +37,16 @@ typedef struct BCWriteCtx {
 static void bcwrite_ktabk(BCWriteCtx *ctx, cTValue *o, int narrow)
 {
   char *p = lj_buf_more(&ctx->sb, 1+10);
-  if (tvisstr(o)) {                           // 字符串
+  if (tvisstr(o)) {                           /* 字符串 */
     const GCstr *str = strV(o);
     MSize len = str->len;
     p = lj_buf_more(&ctx->sb, 5+len);
     p = lj_strfmt_wuleb128(p, BCDUMP_KTAB_STR+len);
     p = lj_buf_wmem(p, strdata(str), len);
-  } else if (tvisint(o)) {                    // 整型
+  } else if (tvisint(o)) {                    /* 整型 */
     *p++ = BCDUMP_KTAB_INT;
     p = lj_strfmt_wuleb128(p, intV(o));
-  } else if (tvisnum(o)) {                    // 浮点型
+  } else if (tvisnum(o)) {                    /* 浮点型 */
     if (!LJ_DUALNUM && narrow) {  /* Narrow number constants to integers. */
       lua_Number num = numV(o);
       int32_t k = lj_num2int(num);
